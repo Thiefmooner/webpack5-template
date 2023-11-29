@@ -1,4 +1,4 @@
-const webpackCommonConfig = require('/webpack.common.js')('development');  //传入的是development，然后返回一个配置对象webpackCommonConfig
+const webpackCommonConfig = require('./webpack.common.js')('development');  //传入的是development，然后返回一个配置对象webpackCommonConfig
 
 module.exports = {
     /**配置webpack-dev-server*/
