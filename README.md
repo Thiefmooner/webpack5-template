@@ -1,6 +1,3 @@
-webpack.common.js // 公用配置  
-webpack.dev.js // 开发时的配置  
-webpack.prod.js // 打包构建时的配置  
 ## 此模板的基本配置：
 webpack-dev-server  
 html-webpack-plugin  
