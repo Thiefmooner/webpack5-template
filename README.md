@@ -18,3 +18,6 @@ babel-loader
 @babel/runtime  
 @babel/preset-env  
 @babel/plugin-transform-runtime  
+css modules  
+添加sass-loader  
+添加TypeScript  

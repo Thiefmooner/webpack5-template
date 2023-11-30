@@ -37,7 +37,16 @@ module.exports = (webpackEnv) => {
                                   ]
                                 ]
                               }
-                            }
+                            },
+                            /**
+                             * css modules(直接在css-loader中添加modules属性即可)
+                             * 对属性名通过hash值或者路径字符串的形式进行重命名
+                             * 保证每个属性名都是唯一添加modules属性 
+                             */
+                            modules: {
+                                localIdentName: '[hash:base64:8]',
+                              }
+
                         }
                     ]
                 },
@@ -47,7 +56,7 @@ module.exports = (webpackEnv) => {
                  *  raw-loader 将文件导入为字符串
                  *  url-loader 将文件作为data URI内联到 bundle 中
                  *  file-loader 将文件发送到输出目录
-                 *  webpack5，我们使用资源模块类型(asset module type)，通过添加 4 种新的模块类型，来替换所有这些 loader： 
+                 *  webpack5，我们使用资源模块类型(asset module type)，通过添加 4 种新的模块类型，来替换所有这些 loader
                  *  asset/resource 发送一个单独的文件并导出 URL，之前通过使用 file-loader 实现
                  *  asset/inline 导出一个资源的 data URI，之前通过使用 url-loader 实现
                  *  asset/source 导出资源的源代码，之前通过使用 raw-loader 实现
@@ -71,9 +80,14 @@ module.exports = (webpackEnv) => {
                         {
                             loader: 'babel-loader',
                             options: {
+                                /**
+                                 * @babel/preset-env,它是转译插件的集合,所有需要转换的es6特性的插件都集合到babel/preset-env 
+                                 */
                                 presets:[
-                                        "@babel/preset-env",  //@babel/preset-env，它是转译插件的集合,所有需要转换的es6特性的插件都集合到babel/preset-env 
+                                    "@babel/preset-env",
+                                    "@babel/preset-typescript"   //@babel/preset-typescript
                                 ],
+
                                 plugins:[
                                     [
                                         /** 通过引入模块的方式来实现polyfill
@@ -101,12 +115,16 @@ module.exports = (webpackEnv) => {
                             }
                         }
                     ]
-                }
+                },
+                {
+                    test: /\.(scss|sass)$/,
+                    use: ["sass-loader"],  //添加sass-loader
+                },
             
             ]
         },
         plugins:[
-            new HtmlWebpackPlugin({  //HtmlWebpackPlugin的使用：直接new在plugins即可
+            new HtmlWebpackPlugin({  //HtmlWebpackPlugin的使用:直接new在plugins即可
                 template: path.resolve(__dirname,'../public/index.ejs') //插件中引入模板index.ejs,让html-webpack-plugin根据模板文件生成html文件
             }),
         ]
