@@ -41,18 +41,18 @@ module.exports = (webpackEnv) => {
                         }
                     ]
                 },
-                /**在webpack5之前我们使用url-loader来加载图片
-                 * 在webpack5中我们使用内置的Asset Modules来加载图像资源
-                 * 在 webpack 5 之前，通常使用
-                 * raw-loader 将文件导入为字符串
-                 * url-loader 将文件作为data URI内联到 bundle 中
-                 * file-loader 将文件发送到输出目录
-                 * webpack5，我们使用资源模块类型(asset module type)，通过添加 4 种新的模块类型，来替换所有这些 loader： 
-                 * asset/resource 发送一个单独的文件并导出 URL，之前通过使用 file-loader 实现
-                 * asset/inline 导出一个资源的 data URI，之前通过使用 url-loader 实现
-                 * asset/source 导出资源的源代码，之前通过使用 raw-loader 实现
-                 * asset 在导出一个 data URI 和发送一个单独的文件之间自动选择，之前通过使用 url-loader，并且配置资源体积限制实现 
-                */
+                /** 在webpack5之前我们使用url-loader来加载图片
+                 *  在webpack5中我们使用内置的Asset Modules来加载图像资源
+                 *  在 webpack 5 之前，通常使用
+                 *  raw-loader 将文件导入为字符串
+                 *  url-loader 将文件作为data URI内联到 bundle 中
+                 *  file-loader 将文件发送到输出目录
+                 *  webpack5，我们使用资源模块类型(asset module type)，通过添加 4 种新的模块类型，来替换所有这些 loader： 
+                 *  asset/resource 发送一个单独的文件并导出 URL，之前通过使用 file-loader 实现
+                 *  asset/inline 导出一个资源的 data URI，之前通过使用 url-loader 实现
+                 *  asset/source 导出资源的源代码，之前通过使用 raw-loader 实现
+                 *  asset 在导出一个 data URI 和发送一个单独的文件之间自动选择，之前通过使用 url-loader，并且配置资源体积限制实现 
+                 */
                 {
                     test:/\.(png|svg|jpg|jpeg|gif)$/,
                     type:'asset',
@@ -63,6 +63,44 @@ module.exports = (webpackEnv) => {
                 {
                     exclude: /\.(js|mjs|ejs|jsx|ts|tsx|css|scss|sass|png|svg|jpg|jpeg|gif)$/i,
                     type: 'asset/resource',   //通过排除其他资源的后缀名,来加载fonts字体或者其他资源
+                },
+                {
+                    test: /\.js$/,
+                    include: path.resolve(__dirname,'./src'),
+                    use:[
+                        {
+                            loader: 'babel-loader',
+                            options: {
+                                presets:[
+                                        "@babel/preset-env",  //@babel/preset-env，它是转译插件的集合,所有需要转换的es6特性的插件都集合到babel/preset-env 
+                                ],
+                                plugins:[
+                                    [
+                                        /** 通过引入模块的方式来实现polyfill
+                                         *  babel只支持最新语法的转换，比如：extends
+                                         *  但是它没办法支持最新的Api，比如：Map，Set，Promise等
+                                         *  需要在不兼容的环境中也支持最新的Api
+                                         *  那么则需要通过polyfill的方式在目标环境中添加缺失的Api
+                                         */
+                                        '@babel/plugin-transform-runtime',  
+                                        {
+                                            "helpers": true,  // helpers？？？？没明白
+                                            "corejs": 3,  //指定依赖corejs的版本进行polyfill
+                                            /**
+                                             *  在我们使用generate时，会在全局环境上注入generate的实现函数
+                                             *  这样会造成全局污染，将regenerator设置true
+                                             *  通过模块引入的方式来调用generate，避免全局污染
+                                             */ 
+                                            "regenerator": true  
+                                        }
+                                    ]
+
+
+                                ]
+
+                            }
+                        }
+                    ]
                 }
             
             ]
@@ -74,3 +112,21 @@ module.exports = (webpackEnv) => {
         ]
     }
 }
+
+
+/**
+ * !!!注意！!!
+ * package.json里添加如下内容，配置目标浏览器，告诉babel我们要为哪些浏览器进行polyfill
+ *   "browserslist": {
+ *   "development": [  // 开发时配置，针对较少的浏览器，使polyfill的代码更少，编译更快
+ *     "last 1 chrome version",
+ *     "last 1 firefox version",
+ *     "last 1 safari version"
+ *    ],
+ *   "production": [  // 生产的配置，需要考虑所有支持的浏览器，支持的浏览器越多，polyfill的代码也就越多
+ *     ">0.2%",
+ *     "not dead",
+ *     "not op_mini all"
+ *    ]
+ *  }
+ */
