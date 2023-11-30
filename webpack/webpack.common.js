@@ -59,6 +59,10 @@ module.exports = (webpackEnv) => {
                     generator:{  //generator用来自定义文件名，与文件存放位置
                         filename:'image/[name].[contenthash:8][ext][query]'
                     }
+                },
+                {
+                    exclude: /\.(js|mjs|ejs|jsx|ts|tsx|css|scss|sass|png|svg|jpg|jpeg|gif)$/i,
+                    type: 'asset/resource',   //通过排除其他资源的后缀名,来加载fonts字体或者其他资源
                 }
             
             ]
