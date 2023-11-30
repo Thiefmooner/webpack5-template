@@ -14,5 +14,5 @@ module.exports = {
             '/api':'www.baidu.com',
         }
     },
-    ...webpackCommonConfig,  //将webpackCommonConfig和开发时候的配置进行合并
-}
+    ... webpackCommonConfig  //将webpackCommonConfig和开发时候的配置进行合并
+};

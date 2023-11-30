@@ -38,15 +38,6 @@ module.exports = (webpackEnv) => {
                                 ]
                               }
                             },
-                            /**
-                             * css modules(直接在css-loader中添加modules属性即可)
-                             * 对属性名通过hash值或者路径字符串的形式进行重命名
-                             * 保证每个属性名都是唯一添加modules属性 
-                             */
-                            modules: {
-                                localIdentName: '[hash:base64:8]',
-                              }
-
                         }
                     ]
                 },
