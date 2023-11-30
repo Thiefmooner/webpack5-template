@@ -15,7 +15,12 @@ module.exports = (webpackEnv) => {
             path:path.resolve(__dirname,'dist')
         },
         module:{
-            rules:[]
+            rules:[
+                {
+                    test:/.css$/i,
+                    use:["style-loader","css-loader"]
+                }
+            ]
         },
         plugins:[
             new HtmlWebpackPlugin({  //HtmlWebpackPlugin的使用：直接new在plugins即可
