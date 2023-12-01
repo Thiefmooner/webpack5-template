@@ -9,10 +9,18 @@ module.exports = (webpackEnv) => {
     const isEnvProduction = webpackEnv === 'production';
     return {
         mode:webpackEnv,
+        devtool: 'source-map',  //配置sourcemap，能够快速定位错误位置
         entry:'./src/index.js',
         output:{
             filename:'main.js',
             path:path.resolve(__dirname,'dist')
+        },
+        /**
+         * 对长期不变的文件使用文件缓存
+         * 在下一次启动的时候,webpack首先会去读取缓存中的文件,以此来提高构建的速度
+         */
+        cache:{
+            type: 'filesystem'
         },
         module:{
             rules:[
@@ -71,6 +79,7 @@ module.exports = (webpackEnv) => {
                         {
                             loader: 'babel-loader',
                             options: {
+                                cacheDirectory: true,//babel的缓存,babel的缓存特性也是和webpack是一样的,在构建时,首先回去读取缓存,以此提高构建的速度
                                 /**
                                  * @babel/preset-env,它是转译插件的集合,所有需要转换的es6特性的插件都集合到babel/preset-env 
                                  */
